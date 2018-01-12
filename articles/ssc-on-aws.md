@@ -17,11 +17,19 @@ You can follow along with this guide on the [AWS Console Web UI](https://aws.ama
 You must be able to access the provisioned EC2 instance to finish setup so you need to have an AWS [key pair](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html "key pair guide").  This allows you to [connect](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EC2_GetStarted.html "how to connect to ec2") to an ec2 instance over ssh.
 
 #### DB setup for RDS MySQL
-If you are not providing a DB then we can setup one on RDS.  SSC requires some configuration for MySQL that we can create with a [DB Parameter Group](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithParamGroups.html#USER_WorkingWithParamGroups.Creating "create a DB Parameter Group").  The required parameters are:
+If you are not providing a DB then we can setup one on RDS.  SSC requires some configuration for MySQL that we can create with a [DB Parameter Group](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithParamGroups.html#USER_WorkingWithParamGroups.Creating "create a DB Parameter Group").  The recommended parameters for MySQL are:
  * `log_bin_trust_function_creators = 1`
  * `max_allowed_packet = 1073741824`
+ * `innodb_log_file_size = 512M`
+ * `innodb_lock_wait_timeout = 300`
+ * `query_cache_type = 1`
+ * `query_cache_size = 64M` (Fortify recommends between 64M and 228M)
+ * `innodb_buffer_pool_size = 512M` (Fortify recommends 10GB or more)
+ * `default_storage_engine = INNODB`
+ * `innodb_file_format = Barracuda`
+ * `innodb_large_prefix = 1`
 
-> See the [Fortify Software Security Center User Guide](https://community.softwaregrp.com/t5/Fortify-Product-Documentation/ct-p/fortify-product-documentation) documentation for more information.
+> See the [Fortify Software Security Center User Guide](https://community.softwaregrp.com/t5/Fortify-Product-Documentation/ct-p/fortify-product-documentation) documentation for more information and for the latest configuration guidance on MySQL and other database server types (Oracle / MS SQL Server)
 
 Later you will apply this Parameter Group to the MySQL instance provisioned by RDS.
 
